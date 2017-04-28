@@ -15,7 +15,7 @@ module Fedex
 
       def add_custom_components(xml)
         super
-        if @shipping_documents.include? "COMMERCIAL_INVOICE"
+        if @shipping_documents[:commercial_invoice]
           add_commercial_invoice(xml)
         else
           add_shipping_document(xml) if @shipping_documents[:shipping_document_types]
