@@ -8,16 +8,17 @@ module Fedex
       def initialize(credentials, options={})
         super(credentials, options)
 
-        @shipping_document = options[:shipping_document]
+        @shipping_documents = options[:shipping_documents]
         @filenames = options.fetch(:filenames) { {} }
       end
 
+
       def add_custom_components(xml)
         super
-        if @shipping_document == "COMMERCIAL_INVOICE"
+        if @shipping_documents.include? "COMMERCIAL_INVOICE"
           add_commercial_invoice(xml)
         else
-          add_shipping_document(xml) if @shipping_document
+          add_shipping_document(xml) if @shipping_documents[:shipping_document_types]
         end
       end
 
@@ -26,10 +27,10 @@ module Fedex
       # Add shipping document specification
       def add_shipping_document(xml)
         xml.ShippingDocumentSpecification{
-          Array(@shipping_document[:shipping_document_types]).each do |type|
+          Array(@shipping_documents[:shipping_document_types]).each do |type|
             xml.ShippingDocumentTypes type
           end
-          hash_to_xml(xml, @shipping_document.reject{ |k| k == :shipping_document_types})
+          hash_to_xml(xml, @shipping_documents.reject{ |k| k == :shipping_document_types})
         }
       end
 
