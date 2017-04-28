@@ -106,7 +106,9 @@ module Fedex
           if @shipping_options[:etd]
             xml.SpecialServiceTypes "ELECTRONIC_TRADE_DOCUMENTS"
             xml.EtdDetail {
-              xml.RequestedDocumentCopies @shipping_options[:etd]
+              Array(@shipping_options[:etd]).each do |type|
+                xml.RequestedDocumentCopies type[:type] if type[:return_copy]
+              end
             }
           end
         }
