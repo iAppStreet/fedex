@@ -160,6 +160,19 @@ rate = fedex.rate(:shipper=>shipper,
                   :shipping_options => shipping_options)
 ```
 
+### ** Getting ALL Shipping Rates for a specific ship date/time **
+
+To find all shipping rates, but for a specific datetime (for examlple, to get around Saturday Pickup Surcharges):
+
+```ruby
+rate = fedex.rate(:ship_timestamp => "2017-05-01T23:59:59-05:00",
+                  :shipper=>shipper,
+                  :recipient => recipient,
+                  :packages => packages,
+                  :smart_post => smart_post,
+                  :shipping_options => shipping_options)
+```
+
 ### ** Get a Transit time **
 ```ruby
 ship = fedex.ship(:shipper=>shipper,

@@ -52,7 +52,8 @@ module Fedex
         @credentials = credentials
         @shipper, @recipient, @packages, @service_type, @customs_clearance_detail, @smart_post, @debug = options[:shipper], options[:recipient], options[:packages], options[:service_type], options[:customs_clearance_detail], options[:smart_post], options[:debug]
         @debug = ENV['DEBUG'] == 'true'
-        @shipping_options =  options[:shipping_options] ||={}
+        @ship_timestamp = options[:ship_timestamp] || nil
+        @shipping_options = options[:shipping_options] ||={}
         @payment_options = options[:payment_options] ||={}
         @freight_account = options[:freight_account] ||={}
 
@@ -331,6 +332,10 @@ module Fedex
           xml.AncillaryEndorsement weight < 1 ? 'ADDRESS_CORRECTION' : 'FORWARDING_SERVICE' # 'CARRIER_LEAVE_IF_NO_RESPONSE'
           xml.HubId @credentials.mode == "production" ? @smart_post[:hub_id] : '5531' # 5902 (LA)
         }
+      end
+
+      def add_ship_timestamp(xml)
+        xml.ShipTimestamp @ship_timestamp
       end
 
       # Fedex Web Service Api
