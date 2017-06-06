@@ -424,6 +424,45 @@ service = fedex.service_availability(fedex_service_hash)
 puts service[:options]
 ```
 
+### ** International Shipping **
+
+#### Electronic Trade Documents
+
+For international shipments, documentation can be attached to shipment requests, which are stored electronically on FedEX's servers for easy access during customs processing. To return a Base64 string copy of the requested document, add a non-`nil` value for `:return_copy`.  
+
+```ruby
+etd_shipping_options = {
+  :packaging_type => "YOUR_PACKAGING",
+  :drop_off_type => "REGULAR_PICKUP",
+  :etd => [
+    {:type => "COMMERCIAL_INVOICE", :return_copy => true}
+  ]
+}
+```
+
+The gem contains document specifications for Commercial Invoices, while other documents can be added as hashes through `shipping_document_types` or defined within the gem in `request/document.rb`. Document specifications must be passed through with the required customs clearance detail information:
+
+```ruby
+
+shipping_documents = {
+  :commercial_invoice => true,
+  :shipping_document_types => {
+    # other manually entered document specs
+  }
+}
+
+document = fedex.document(:shipper => shipper,
+                          :recipient => recipient,
+                          :packages => packages,
+                          :service_type => 'INTERNATIONAL_ECONOMY',
+                          :customs_clearance_detail => customs_clearance_detail,
+                          :shipping_options => etd_shipping_options,
+                          :shipping_documents => shipping_documents)
+
+
+```
+
+
 # Services/Options Available
 
 ```ruby

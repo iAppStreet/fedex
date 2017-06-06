@@ -166,10 +166,16 @@ module Fedex
         }
       end
 
-      # Add shipping charges to xml request
+      # Add shipping charges to xml request - wrapper for Payor/PaymentType nodes
       def add_shipping_charges_payment(xml)
         xml.ShippingChargesPayment{
-          xml.PaymentType @payment_options[:type] || "SENDER"
+          add_payment_and_payor(xml)
+        }
+      end
+
+      # Add payor Node
+      def add_payment_and_payor(xml)
+        xml.PaymentType @payment_options[:type] || "SENDER"
           xml.Payor{
             if service[:version].to_i >= Fedex::API_VERSION.to_i
               xml.ResponsibleParty {
@@ -185,7 +191,6 @@ module Fedex
               xml.CountryCode @payment_options[:country_code] || @shipper[:country_code]
             end
           }
-        }
       end
 
       # Add Master Tracking Id (for MPS Shipping Labels, this is required when requesting labels 2 through n)
@@ -308,6 +313,12 @@ module Fedex
       # Add customs clearance(for international shipments)
       def add_customs_clearance(xml)
         xml.CustomsClearanceDetail{
+          # Add DutiesPayment node w/ Payor info
+          xml.DutiesPayment{
+            add_payment_and_payor(xml)
+          }
+          
+          # Attach remainder of CCD from input hash
           hash_to_xml(xml, @customs_clearance_detail)
         }
       end
