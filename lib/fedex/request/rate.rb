@@ -26,7 +26,7 @@ module Fedex
             "#{api_response["Fault"]["detail"]["fault"]["reason"]}\n--#{api_response["Fault"]["detail"]["fault"]["details"]["ValidationFailureDetail"]["message"].join("\n--")}"
           end rescue $1
 
-          raise RateError, response[:fault][:detail][:desc]
+          raise RateError, error_message || response[:fault][:detail][:desc]
         end
       end
 
