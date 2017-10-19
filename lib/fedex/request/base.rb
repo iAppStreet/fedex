@@ -326,6 +326,7 @@ module Fedex
       # Smart Post
       def add_smart_post(xml)
         weight = @packages.first[:weight][:value]
+        weight = weight.between?(0.99, 1.0) ? 1.0 : weight # there's a weird gap in service availability between 0.99 and 1 lbs
 
         xml.SmartPostDetail{
           xml.Indicia weight < 0.99 ? 'PRESORTED_STANDARD' : 'PARCEL_SELECT'
