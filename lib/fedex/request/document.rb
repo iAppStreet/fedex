@@ -47,6 +47,14 @@ module Fedex
               xml.ImageType "PDF"
               xml.StockType "PAPER_LETTER"
             }
+            xml.CustomerImageUsages {
+              xml.Type "LETTER_HEAD"
+              xml.Id "IMAGE_1"
+            }
+            xml.CustomerImageUsages {
+              xml.Type "SIGNATURE"
+              xml.Id "IMAGE_2"
+            }
           }
         }
       end
