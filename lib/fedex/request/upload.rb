@@ -12,19 +12,21 @@ module Fedex
       end
 
       def process_request
-        puts build_xml #if @debug == true
+        puts build_xml if @debug == true
         api_response = self.class.post api_url, body: build_xml
-        puts api_response #if @debug == true
+        puts api_response if @debug == true
         response = parse_response(api_response)
-        # unless success?(response)
-        #   error_message = if response[:shipment_reply]
-        #     [response[:shipment_reply][:notifications]].flatten.first[:message]
-        #   else
-        #     "#{api_response["Fault"]["detail"]["fault"]["reason"]}\n
-        #     --#{api_response["Fault"]["detail"]["fault"]["details"]["ValidationFailureDetail"]["message"].join("\n--")}"
-        #   end rescue $1
-        #   raise RateError, error_message
-        # end
+        if success?(response)
+          Fedex::Upload.new(response[:upload_images_reply][:image_statuses])
+        else
+          error_message = if response[:upload_images_reply]
+            [response[:upload_images_reply][:notifications]].flatten.first[:message]
+          else
+            "#{api_response["Fault"]["detail"]["fault"]["reason"]}\n
+            --#{api_response["Fault"]["detail"]["fault"]["details"]["ValidationFailureDetail"]["message"].join("\n--")}"
+          end rescue $1
+          raise UploadError, error_message
+        end
       end
 
       private
