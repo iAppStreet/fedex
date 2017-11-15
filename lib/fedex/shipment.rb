@@ -10,6 +10,7 @@ require 'fedex/request/ground_close'
 require 'fedex/request/pickup'
 require 'fedex/request/pickup_availability'
 require 'fedex/request/service_availability'
+require 'fedex/request/upload'
 
 module Fedex
   class Shipment
@@ -102,6 +103,7 @@ module Fedex
     def ground_close(options = {})
       Request::GroundClose.new(@credentials, options).process_request
     end
+
     # @param [String] country_code, A string containing country code
     # @param [String] state_code, A string containing state code
     # @param [String] postal_code, A string containing postal code
@@ -111,13 +113,19 @@ module Fedex
     def pickup_availability(options = {})
       Request::PickupAvailability.new(@credentials, options).process_request
     end
-    
+
     # param [Hash] origin, A hash containing origin information
     # param [Hash] destination, A hash containing destination information
     # param [date] ship_date, A string containing ship date in YYYY-MM-DD format
     # param [String] carrier_code, A string containing carrier code
     def service_availability(options = {})
       Request::ServiceAvailability.new(@credentials, options).process_request
+    end
+
+    # @param [String] id, A string the Id of the image you're uploading IMAGE_1, IMAGE_2, etc
+    # @param [String] image, A string containing the base64 encoded image
+    def upload(options = {})
+      Request::Upload.new(@credentials, options).process_request
     end
 
   end

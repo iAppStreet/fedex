@@ -2,6 +2,7 @@ require 'httparty'
 require 'nokogiri'
 require 'fedex/helpers'
 require 'fedex/rate'
+require 'fedex/upload'
 
 module Fedex
   module Request
@@ -317,7 +318,7 @@ module Fedex
           xml.DutiesPayment{
             add_payment_and_payor(xml)
           }
-          
+
           # Attach remainder of CCD from input hash
           hash_to_xml(xml, @customs_clearance_detail)
         }
