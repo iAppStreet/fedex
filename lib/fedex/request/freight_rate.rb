@@ -10,6 +10,7 @@ module Fedex
       def add_requested_shipment(xml)
         xml.RequestedShipment{
           xml.ServiceType service_type if service_type
+          xml.PreferredCurrency @shipper[:country_code] == "CA" ? "CAD" : "USD"
           add_shipper(xml)
           add_recipient(xml)
           xml.ShippingChargesPayment{
@@ -21,6 +22,7 @@ module Fedex
             }
           }
           add_freight_shipment_detail(xml)
+          xml.RateRequestTypes "PREFERRED"
         }
       end
 

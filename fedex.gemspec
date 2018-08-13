@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
   s.name        = 'fedex'
   s.version     = Fedex::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Jazmin Schroeder']
-  s.email       = ['jazminschroeder@gmail.com']
-  s.homepage    = 'https://github.com/jazminschroeder/fedex'
-  s.summary     = %q{Fedex Web Services}
+  s.authors     = ['Jazmin Schroeder', 'Jon Buda']
+  s.email       = ['jazminschroeder@gmail.com', 'jon@blackbox.cool']
+  s.homepage    = 'https://github.com/Blackbox/fedex'
+  s.summary     = %q{Fedex Web Services (Blackbox fork)}
   s.description = %q{Provides an interface to Fedex Web Services}
 
   s.rubyforge_project = 'fedex'
