@@ -317,7 +317,7 @@ module Fedex
         xml.CustomsClearanceDetail{
           # Add DutiesPayment node w/ Payor info
           xml.DutiesPayment{
-            add_payment_and_payor(xml)
+            xml.PaymentType "RECIPIENT"
           }
 
           # Attach remainder of CCD from input hash
