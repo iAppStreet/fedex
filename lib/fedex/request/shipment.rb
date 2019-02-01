@@ -44,8 +44,8 @@ module Fedex
           xml.ShipTimestamp @shipping_options[:ship_timestamp] ||= Time.now.utc.iso8601(2)
           xml.DropoffType @shipping_options[:drop_off_type] ||= "REGULAR_PICKUP"
           xml.ServiceType service_type
-          xml.PreferredCurrency @shipper[:country_code] == "CA" ? "CAD" : "USD"
           xml.PackagingType @shipping_options[:packaging_type] ||= "YOUR_PACKAGING"
+          xml.PreferredCurrency @shipper[:country_code] == "CA" ? "CAD" : "USD"
           add_total_weight(xml) if @mps.has_key? :total_weight
           add_shipper(xml)
           add_recipient(xml)
