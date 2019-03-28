@@ -39,6 +39,9 @@ module Fedex
       # List of available Carrier Codes
       CARRIER_CODES = %w(FDXC FDXE FDXG FDCC FXFR FXSP)
 
+      # List of available Tin Types
+      TIN_TYPES = %w(BUSINESS_NATIONAL BUSINESS_STATE BUSINESS_UNION PERSONAL_NATIONAL PERSONAL_STATE)
+
       # In order to use Fedex rates API you must first apply for a developer(and later production keys),
       # Visit {http://www.fedex.com/us/developer/ Fedex Developer Center} for more information about how to obtain your keys.
       # @param [String] key - Fedex web service key
@@ -51,8 +54,8 @@ module Fedex
       def initialize(credentials, options={})
         requires!(options, :shipper, :recipient, :packages)
         @credentials = credentials
-        @shipper, @recipient, @packages, @service_type, @customs_clearance_detail, @smart_post, @debug =
-          options[:shipper], options[:recipient], options[:packages], options[:service_type],
+        @shipper, @tins, @recipient, @packages, @service_type, @customs_clearance_detail, @smart_post, @debug =
+          options[:shipper], options[:tins], options[:recipient], options[:packages], options[:service_type],
           options[:customs_clearance_detail], options[:smart_post], options[:debug]
         @debug = @debug || (ENV['DEBUG'] == 'true')
         @ship_timestamp = options[:ship_timestamp] || nil
@@ -179,11 +182,20 @@ module Fedex
 
       # Add payor Node
       def add_payment_and_payor(xml)
+        tins = @payment_options[:tins] || @tins
         xml.PaymentType @payment_options[:type] || "SENDER"
           xml.Payor{
             if service[:version].to_i >= Fedex::API_VERSION.to_i
               xml.ResponsibleParty {
                 xml.AccountNumber @payment_options[:account_number] || @credentials.account_number
+                if !!tins && tins.size > 0
+                  xml.Tins{
+                    tins.each do |tin|
+                      xml.TinType tin[:type]
+                      xml.Number  tin[:value]
+                    end
+                  }
+                end
                 xml.Contact {
                   xml.PersonName @payment_options[:name] || @shipper[:name]
                   xml.CompanyName @payment_options[:company] || @shipper[:company]
