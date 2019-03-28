@@ -1,5 +1,5 @@
 module Fedex
-  VERSION = "4.0.4"
+  VERSION = "4.1.1"
   API_VERSION = "22"
   PICKUP_API_VERSION = "5"
   UPLOAD_IMAGES_API_VERSION = "9"
